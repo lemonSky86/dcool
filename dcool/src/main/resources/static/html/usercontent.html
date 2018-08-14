@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人页面</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <!-- Bootstrap -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="dcool_header">
+        <button type="button" class="btn btn-default" id="userInfoBtn">User Info</button>
+    </div>
+    <div class="dcool_content">
+
+    </div>
+    <div class="dcool_treil">
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+
+        /**
+          * @Description //检查用户状态
+          * @Param
+          * @Author oneTi
+          * @Date 15:32 2018/8/10
+          * @Return
+          **/
+        function checkUserStatus()
+        {
+            $.ajax({
+                async:false,
+                url:"/user/status/",
+                success:function (result) {
+                    if (result != null)
+                    {
+                        alert(result.id);
+                       $("#userInfoBtn").text(result.userName);
+                    }
+                }
+            })
+        }
+
+        $(function () {
+            checkUserStatus();
+        });
+    </script>
+</body>
+</html>
