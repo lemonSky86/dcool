@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>个人页面</title>
+    <title>Personnel Page</title>
     <link rel="stylesheet" href="../css/main.css">
     <!-- Bootstrap -->
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -24,7 +24,19 @@
 </head>
 <body>
     <div class="dcool_header">
-        <button type="button" class="btn btn-default" id="userInfoBtn">User Info</button>
+        <!--<button type="button" class="btn btn-default" id="userInfoBtn">User Info</button>-->
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <ul class="nav navbar-nav">
+                    ...
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <!--<li><a data-toggle="modal" href="#loginModal">Login</a></li>-->
+                    <!--<li><a data-toggle="modal" href="#registerModal">Register</a></li>-->
+                    <p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link" id="userName">Mark Otto</a></p>
+                </ul>
+            </div>
+        </nav>
     </div>
     <div class="dcool_content">
         <div class="userContentDiv Photo"></div>
@@ -52,8 +64,7 @@
                 success:function (result) {
                     if (result != null)
                     {
-                        alert(result.id);
-                       $("#userInfoBtn").text(result.userName);
+                       $("#userName").text(result.userName);
                     }
                 }
             })

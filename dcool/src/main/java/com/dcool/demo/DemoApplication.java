@@ -23,7 +23,7 @@ public class DemoApplication {
         UserSessionFilter userSessionFilter = new UserSessionFilter();
         filterRegistrationBean.setFilter(userSessionFilter);
         filterRegistrationBean.setOrder(Integer.MIN_VALUE);
-        filterRegistrationBean.addUrlPatterns("/user/status"); //指定需要过滤的URL
+        filterRegistrationBean.addUrlPatterns("/user/status/"); //指定需要过滤的URL
         return filterRegistrationBean;
     }
 }
