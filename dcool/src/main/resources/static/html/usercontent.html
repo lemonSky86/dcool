@@ -6,19 +6,35 @@
     <link rel="stylesheet" href="../css/main.css">
     <!-- Bootstrap -->
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/dropzone.css">
     <style>
         .userContentDiv{
             width: 80%;
-            height: 200px;
+            height: 400px;
             margin-bottom: 10px;
         }
 
-        .userContentDiv Photo{
+        .userContentDiv.Photo{
             background-color: aquamarine;
+            margin: 0 auto;
+            padding-top: 52px;
         }
 
-        .userContentDiv Music{
+        .userContentDiv .Music{
             background-color: lightskyblue;
+        }
+
+        /*drop area 样式*/
+        .upload-form{
+            width: 70%;
+            height: 300px;
+            margin: 0 auto;
+            background-color: aliceblue;
+            cursor: pointer;
+            text-align: center;
+            padding-top: 140px;
+            /*display: table-cell;*/
+            /*vertical-align: middle;*/
         }
     </style>
 </head>
@@ -33,20 +49,26 @@
                 <ul class="nav navbar-nav navbar-right">
                     <!--<li><a data-toggle="modal" href="#loginModal">Login</a></li>-->
                     <!--<li><a data-toggle="modal" href="#registerModal">Register</a></li>-->
-                    <p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link" id="userName">Mark Otto</a></p>
+                    <p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link" id="userName"></a></p>
                 </ul>
             </div>
         </nav>
     </div>
     <div class="dcool_content">
-        <div class="userContentDiv Photo"></div>
+        <div class="userContentDiv Photo">
+            <form action="/photo/upload" method="post" class="dropzone upload-form"></form>
+            <!--<div class="upload-form" id="upload-form">-->
+                <!--<p>click here to upload file</p>-->
+            <!--</div>-->
+        </div>
         <div class="userContentDiv Music"></div>
     </div>
     <div class="dcool_treil">
-
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--Drop Area上传控件-->
+    <script src="../js/dropzone.js"></script>
     <script>
 
         /**
@@ -72,6 +94,9 @@
 
         $(function () {
             checkUserStatus();
+
+            //文件上传
+            // $("div#upload-form").dropzone({ url: "/photo/upload" });
         });
     </script>
 </body>
