@@ -1,9 +1,12 @@
 package com.dcool.demo.service;
 
 import com.dcool.demo.domain.PhotoInfo;
+import com.dcool.demo.domain.UserInfo;
 import com.dcool.demo.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Description: TODO
@@ -14,9 +17,32 @@ import org.springframework.stereotype.Service;
 public class PhotoServiceImpl implements PhotoService {
 
     @Autowired
-    PhotoRepository photoService;
+    PhotoRepository photoRepository;
 
     public PhotoInfo uploadPhoto(PhotoInfo photoInfo){
-        return photoService.save(photoInfo);
+        return photoRepository.save(photoInfo);
     }
+
+    public List<PhotoInfo> findPhotoByUserInfo(UserInfo userInfo)
+    {
+        return photoRepository.findPhotoInfoByToUser(userInfo);
+    }
+
+    public List<PhotoInfo> findLatestPhotoByUserId(Integer userId)
+    {
+        return photoRepository.findPhotoInfoByToUser_Id(userId);
+    }
+
+    public void save(PhotoInfo photoInfo)
+    {
+        if (photoInfo != null)
+        {
+            photoRepository.save(photoInfo);
+        }
+    }
+
+//    public List<PhotoInfo> findLatestPhotoByUserInfo(UserInfo userInfo)
+//    {
+//        return photoRepository.findPhotoInfoByToUserAOrderByDateDesc(userInfo);
+//    }
 }

@@ -1,0 +1,72 @@
+package com.dcool.demo.controller;
+
+import com.dcool.demo.domain.MusicInfo;
+import com.dcool.demo.domain.UserInfo;
+import com.dcool.demo.service.MusicService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * @Description: TODO
+ * @Author oneTi
+ * @Date 2018/8/2115:58
+ */
+@Controller
+public class MusicController extends BaseController {
+
+    @Value("${upload.music.path}")
+    private String uploadMusicPath;
+    @Autowired
+    private MusicService musicService;
+
+    /**
+     * @Description //保存文件
+     * @Param [multipartFile]
+     * @Author oneTi
+     * @Date 16:02 2018/8/21
+     * @Return java.lang.String
+     **/
+    @RequestMapping("/music/upload")
+    @ResponseBody
+    public String upload(@RequestParam("file")MultipartFile multipartFile) throws IOException {
+        if (multipartFile != null)
+        {
+            MusicInfo musicInfo = new MusicInfo();
+            //文件名
+            String fileName = multipartFile.getOriginalFilename();
+            musicInfo.setName(fileName);
+            musicInfo.setDate(new Date());
+            UserInfo userInfo = (UserInfo) request.getSession().getAttribute("userInfo");
+            musicInfo.setToUser(userInfo);
+            musicService.uploadMusic(musicInfo);
+            //保存文件
+            multipartFile.transferTo(new File(fileName));
+        }
+        return null;
+    }
+
+    /**
+     * @Description //显示Top5
+     * @Param []
+     * @Author oneTi
+     * @Date 17:29 2018/8/21
+     * @Return java.util.List<com.dcool.demo.domain.MusicInfo>
+     **/
+    @RequestMapping("/music/showfive")
+    @ResponseBody
+    public List<MusicInfo> showTopFive(){
+        return musicService.findTopFiveMusicInfoByDate();
+    }
+}

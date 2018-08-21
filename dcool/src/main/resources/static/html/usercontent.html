@@ -10,7 +10,7 @@
     <style>
         .userContentDiv{
             width: 80%;
-            height: 400px;
+            height: 50%;
             margin-bottom: 10px;
         }
 
@@ -20,8 +20,10 @@
             padding-top: 52px;
         }
 
-        .userContentDiv .Music{
+        .userContentDiv.Music{
             background-color: lightskyblue;
+            margin: 0 auto;
+            padding-top: 52px;
         }
 
         /*drop area 样式*/
@@ -35,6 +37,41 @@
             padding-top: 140px;
             /*display: table-cell;*/
             /*vertical-align: middle;*/
+        }
+
+        /*photo 展示框样式*/
+        .photo-slide{
+            width: 70%;
+            height: 300px;
+            margin: 0 auto;
+            /*overflow: hidden;*/
+            display: none;
+        }
+
+        .photo-div-left{
+            width: 90%;
+            height: 100%;
+            /*border-right: 1px solid #dddddd;*/
+            display: inline-block;
+            overflow: hidden;
+        }
+
+        .photo-div-left img{
+            margin: 0 auto;
+        }
+
+        .photo-div-right{
+            width: 9%;
+            height: 100%;
+            display: inline-block;
+            overflow: hidden;
+        }
+
+        .photo-div-right a{
+            height: 50%;
+            border: #FFFFFF;
+            padding-top: 65px;
+            border-radius: unset;
         }
     </style>
 </head>
@@ -56,12 +93,35 @@
     </div>
     <div class="dcool_content">
         <div class="userContentDiv Photo">
-            <form action="/photo/upload" method="post" class="dropzone upload-form"></form>
+            <!--dropzone 图片上传表单-->
+            <form class="upload-form" id="photoForm"></form>
             <!--<div class="upload-form" id="upload-form">-->
                 <!--<p>click here to upload file</p>-->
             <!--</div>-->
+            <div class="photo-slide" id="photo-slide">
+                <div class="photo-div-left" id="photo-div-left">
+
+                </div>
+                <div class="photo-div-right">
+                    <a class="btn btn-default" href="#" role="button">Link</a>
+                    <a class="btn btn-default" href="#" role="button">Link</a>
+                </div>
+            </div>
         </div>
-        <div class="userContentDiv Music"></div>
+        <div class="userContentDiv Music">
+            <!--dropzone 自定义预览位置-->
+            <!--<div class="dropzone-previews" id="dropZonePreview" style="width: 100%;height: 200px;"></div>-->
+            <form class="upload-form" id="musicForm"></form>
+            <div class="photo-slide" id="music-slide">
+                <div class="photo-div-left" id="music-div-left">
+
+                </div>
+                <div class="photo-div-right">
+                    <a class="btn btn-default" href="#" role="button">Link</a>
+                    <a class="btn btn-default" href="#" role="button">Link</a>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="dcool_treil">
     </div>
@@ -92,11 +152,71 @@
             })
         }
 
+        /**
+          * @Description //查找当前用户是否上传过图片，是则返回查询结果
+          * @Param
+          * @Author oneTi
+          * @Date 14:25 2018/8/20
+          * @Return
+          **/
+        function checkUserPhotoUpload()
+        {
+            $.ajax({
+                url:"/photo/latest",
+                success:function (result) {
+                    if(result != null)
+                    {
+                        // console.log(result);
+                        // $("#upload-form").hide();
+                        // $("#photo-slide").show("normal", function () {
+                        //     $("#photo-div-left").html("<img src='/"+ result[0].name +"' style='width: 100%;height: 100%;' >");
+                        // });
+                    }
+                }
+            })
+        }
+
+        function checkPhotoUploadStatus()
+        {
+            var photoDropzone = new Dropzone("form#photoForm", {
+                url: "/photo/upload",
+                //自定义预览模版 其他相似属性可作参照
+                previewTemplate: "<div class=\"dz-preview dz-file-preview\">" +
+                "<div class=\"dz-details\">" +
+                "    <div class=\"dz-filename\"><span data-dz-name></span></div>" +
+                "    <div class=\"dz-size\" data-dz-size></div>" +
+                "    <img data-dz-thumbnail />" +
+                "  </div>" +
+                "  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>" +
+                "</div>"
+            });
+            //自定义预览位置 其他相似属性可作参照
+            photoDropzone.previewsContainer = document.getElementById("dropZonePreview");//这里不能使用JQuery选择器
+            //当图片上传成功时执行 其他相似方法可作参考
+            photoDropzone.on("success", function (result) {
+                // $.ajax({
+                //     url:"/photo/latest",
+                //     success:function(result){
+                //         // console.log(result[0].name);
+                //         $("#upload-form").hide();
+                //         $("#photo-slide").show("normal", function () {
+                //             $("#photo-div-left").html("<img src='/"+ result[0].name +"' style='width: 100%;height: 100%;' >");
+                //         });
+                //     }
+                // })
+            });
+        }
+
         $(function () {
+            //检查用户登陆状态
             checkUserStatus();
 
-            //文件上传
-            // $("div#upload-form").dropzone({ url: "/photo/upload" });
+
+
+            //检查用户上传状态
+            checkUserPhotoUpload();
+            //检查图片上传状态
+            checkPhotoUploadStatus();
         });
     </script>
 </body>

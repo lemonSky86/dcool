@@ -1,5 +1,10 @@
 package com.dcool.demo.controller;
 
+import com.dcool.demo.domain.PhotoInfo;
+import com.dcool.demo.domain.UserInfo;
+import com.dcool.demo.service.PhotoService;
+import com.dcool.demo.util.UserThreadLocalUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -10,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Description: TODO
@@ -19,10 +26,12 @@ import java.io.IOException;
 @Controller
 public class PhotoController extends BaseController {
 
-    @Value("${upload.picture.path}")
+    @Value("${upload.photo.path}")
     private String uploadPicturePath;
     @javax.annotation.Resource
     private ResourceLoader resourceLoader;
+    @Autowired
+    PhotoService photoService;
 
     /**
      * @Description //上传
@@ -39,7 +48,18 @@ public class PhotoController extends BaseController {
             //multipartFile.getOriginalFilename() 获取文件原始名称
             //new File(multipartFile.getOriginalFilename()) 根据获取到的原始文件名创建目标文件
             //multipartFile.transferTo() 将收到的文件传输到目标文件中
-            multipartFile.transferTo(new File(multipartFile.getOriginalFilename()));
+            if(multipartFile != null)
+            {
+                PhotoInfo photoInfo = new PhotoInfo();
+                photoInfo.setName(multipartFile.getOriginalFilename());
+                UserInfo userInfo = (UserInfo) request.getSession().getAttribute("userInfo");
+                photoInfo.setToUser(userInfo);//这里的UserThreadLocalUtil.getUser()为空
+                photoInfo.setDate(new Date());
+//                photoService.save(photoInfo);
+
+                multipartFile.transferTo(new File(multipartFile.getOriginalFilename()));
+                return "true";
+            }
         }
         catch (IOException e){
             e.printStackTrace();
@@ -66,5 +86,25 @@ public class PhotoController extends BaseController {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    /**
+      * @Description //返回当前用户最新图片
+      * @Param
+      * @Author oneTi
+      * @Date 14:16 2018/8/20
+      * @Return
+      **/
+    @RequestMapping("/photo/latest")
+    @ResponseBody
+    public List<PhotoInfo> showLatestPhoto()
+    {
+        UserInfo userInfo = (UserInfo) request.getSession().getAttribute("userInfo");
+        if(userInfo != null)
+        {
+            List<PhotoInfo> photoList = photoService.findLatestPhotoByUserId(userInfo.getId());
+            return  photoList;
+        }
+        return null;
     }
 }
