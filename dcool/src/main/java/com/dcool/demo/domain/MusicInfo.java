@@ -1,5 +1,6 @@
 package com.dcool.demo.domain;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -10,6 +11,7 @@ import java.util.Date;
  * @Author oneTi
  * @Date 2018/8/2115:55
  */
+@Entity
 public class MusicInfo {
 
     @Id

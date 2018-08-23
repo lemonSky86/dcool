@@ -22,7 +22,7 @@ public interface MusicService {
      * @Date 16:22 2018/8/21
      * @Return java.util.List<com.dcool.demo.domain.MusicInfo>
      **/
-    List<MusicInfo> findLatestMusicInfo();
+    MusicInfo findLatestMusicInfo();
 
     /**
      * @Description //根据用户Id查找文件

@@ -5,6 +5,7 @@ import com.dcool.demo.repository.MusicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ import java.util.List;
 public class MusicServiceImpl implements MusicService {
 
     @Autowired
-    private MusicRepository musicRepository;
+    MusicRepository musicRepository;
 
     public MusicInfo uploadMusic(MusicInfo musicInfo){
         if(musicInfo != null)
@@ -27,8 +28,8 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
-    public List<MusicInfo> findLatestMusicInfo() {
-        return musicRepository.findMusicInfoByDateOrderByDateDateDesc();
+    public MusicInfo findLatestMusicInfo() {
+        return musicRepository.findFirstByOrderByDateDesc();
     }
 
     @Override
@@ -38,6 +39,6 @@ public class MusicServiceImpl implements MusicService {
 
     @Override
     public List<MusicInfo> findTopFiveMusicInfoByDate() {
-        return musicRepository.findTop5ByDate();
+        return musicRepository.findTop5ByDateNotNull();
     }
 }

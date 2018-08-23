@@ -1,6 +1,7 @@
 div{
     margin: 0px;
     padding: 0px;
+    border-style: none;
 }
 .dcool_header{
     width: 100%;

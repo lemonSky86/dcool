@@ -24,7 +24,7 @@ public interface MusicRepository extends JpaRepository<MusicInfo, Long> {
      * @Date 16:14 2018/8/21
      * @Return com.dcool.demo.domain.MusicInfo
      **/
-    List<MusicInfo> findMusicInfoByDateOrderByDateDateDesc();
+    MusicInfo findFirstByOrderByDateDesc();
 
     /**
      * @Description //根据时间查找Top5数据
@@ -33,5 +33,5 @@ public interface MusicRepository extends JpaRepository<MusicInfo, Long> {
      * @Date 17:19 2018/8/21
      * @Return java.util.List<com.dcool.demo.domain.MusicInfo>
      **/
-    List<MusicInfo> findTop5ByDate();
+    List<MusicInfo> findTop5ByDateNotNull();
 }

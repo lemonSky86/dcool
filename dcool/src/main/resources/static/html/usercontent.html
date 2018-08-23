@@ -8,26 +8,31 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/dropzone.css">
     <style>
-        .userContentDiv{
+        /*内容块*/
+        .userContainerDiv{
             width: 80%;
             height: 50%;
-            margin-bottom: 10px;
+            /*margin-bottom: 10px;*/
+            margin: 0 auto;
+            padding-top: 52px;
         }
 
-        .userContentDiv.Photo{
+        /*图片内容块*/
+        .photoDiv{
             background-color: aquamarine;
-            margin: 0 auto;
-            padding-top: 52px;
+            /*margin: 0 auto;*/
+            /*padding-top: 52px;*/
         }
 
-        .userContentDiv.Music{
+        /*声音内容块*/
+        .musicDiv{
             background-color: lightskyblue;
-            margin: 0 auto;
-            padding-top: 52px;
+            /*margin: 0 auto;*/
+            /*padding-top: 52px;*/
         }
 
-        /*drop area 样式*/
-        .upload-form{
+        /*drop area样式*/
+        .uploadForm{
             width: 70%;
             height: 300px;
             margin: 0 auto;
@@ -35,43 +40,89 @@
             cursor: pointer;
             text-align: center;
             padding-top: 140px;
-            /*display: table-cell;*/
-            /*vertical-align: middle;*/
         }
 
-        /*photo 展示框样式*/
-        .photo-slide{
-            width: 70%;
+        /*存放资源内容div样式*/
+        .contentDiv{
+            width: 80%;
             height: 300px;
             margin: 0 auto;
-            /*overflow: hidden;*/
+            background-color: #FFFFFF;
             display: none;
         }
 
-        .photo-div-left{
+        .contentLeftDiv{
             width: 90%;
             height: 100%;
-            /*border-right: 1px solid #dddddd;*/
             display: inline-block;
+            padding: 1px;
             overflow: hidden;
         }
 
-        .photo-div-left img{
+        .contentLeftDiv img{
             margin: 0 auto;
         }
 
-        .photo-div-right{
-            width: 9%;
+        .contentRightDiv{
+            width: 10%;
             height: 100%;
             display: inline-block;
             overflow: hidden;
+            background-color: bisque;
+            margin-left: -4px;
         }
 
-        .photo-div-right a{
+        .contentRightDiv a{
+            width: 100%;
             height: 50%;
             border: #FFFFFF;
             padding-top: 65px;
             border-radius: unset;
+        }
+
+        .musicDisk{
+            width: 161px;
+            height: 161px;
+            border-radius: 45%; /*变成45%之后动画执行的时候会有一个虚假的动态效果*/
+            background-color: #000000;
+            margin-top: 115px;
+            display: none;
+        }
+
+        /*旋转动画*/
+        @keyframes diskRotate{
+            form{
+                transform: rotateZ(0deg);
+                -ms-transform: rotateZ(0deg);
+                -moz-transform: rotateZ(0deg);
+                -webkit-transform: rotateZ(0deg);
+                -o-transform: rotateZ(0deg);
+            }
+            to{
+                transform: rotateZ(360deg);
+                -ms-transform: rotateZ(360deg);
+                -moz-transform: rotateZ(360deg);
+                -webkit-transform: rotateZ(360deg);
+                -o-transform: rotateZ(360deg);
+            }
+        }
+
+        /*chrome*/
+        @-webkit-keyframes diskRotate{
+            form{
+                transform: rotateZ(0deg);
+                -ms-transform: rotateZ(0deg);
+                -moz-transform: rotateZ(0deg);
+                -webkit-transform: rotateZ(0deg);
+                -o-transform: rotateZ(0deg);
+            }
+            to{
+                transform: rotateZ(360deg);
+                -ms-transform: rotateZ(360deg);
+                -moz-transform: rotateZ(360deg);
+                -webkit-transform: rotateZ(360deg);
+                -o-transform: rotateZ(360deg);
+            }
         }
     </style>
 </head>
@@ -92,33 +143,27 @@
         </nav>
     </div>
     <div class="dcool_content">
-        <div class="userContentDiv Photo">
+        <div class="userContainerDiv photoDiv">
             <!--dropzone 图片上传表单-->
-            <form class="upload-form" id="photoForm"></form>
-            <!--<div class="upload-form" id="upload-form">-->
-                <!--<p>click here to upload file</p>-->
-            <!--</div>-->
-            <div class="photo-slide" id="photo-slide">
-                <div class="photo-div-left" id="photo-div-left">
-
+            <form class="uploadForm" id="photoForm"></form>
+            <div class="contentDiv" id="photo-slide">
+                <div class="contentLeftDiv" id="photo-div-left">
                 </div>
-                <div class="photo-div-right">
+                <div class="contentRightDiv">
                     <a class="btn btn-default" href="#" role="button">Link</a>
                     <a class="btn btn-default" href="#" role="button">Link</a>
                 </div>
             </div>
         </div>
-        <div class="userContentDiv Music">
-            <!--dropzone 自定义预览位置-->
-            <!--<div class="dropzone-previews" id="dropZonePreview" style="width: 100%;height: 200px;"></div>-->
-            <form class="upload-form" id="musicForm"></form>
-            <div class="photo-slide" id="music-slide">
-                <div class="photo-div-left" id="music-div-left">
-
+        <div class="userContainerDiv musicDiv">
+            <form class="uploadForm" id="musicForm"></form>
+            <div class="contentDiv" id="music-list">
+                <div class="contentLeftDiv" id="music-div-left">
                 </div>
-                <div class="photo-div-right">
-                    <a class="btn btn-default" href="#" role="button">Link</a>
-                    <a class="btn btn-default" href="#" role="button">Link</a>
+                <div class="contentRightDiv">
+                    <!--<a class="btn btn-default" href="#" role="button">Link</a>-->
+                    <!--<a class="btn btn-default" href="#" role="button">Link</a>-->
+                    <div class="musicDisk" id="musicPlayDisk"></div>
                 </div>
             </div>
         </div>
@@ -176,6 +221,13 @@
             })
         }
 
+        /**
+          * @Description //检查图片的上传状态
+          * @Param
+          * @Author oneTi
+          * @Date 9:14 2018/8/22
+          * @Return
+          **/
         function checkPhotoUploadStatus()
         {
             var photoDropzone = new Dropzone("form#photoForm", {
@@ -207,16 +259,112 @@
             });
         }
 
+        /**
+         * @Description //检查声音上传情况
+         * @Param
+         * @Author oneTi
+         * @Date 9:17 2018/8/22
+         * @Return
+         **/
+        function checkUserMusicUpload()
+        {
+            $.ajax({
+                url:"/music/showfive",
+                success:function (result) {
+                    if (result != null)
+                    {
+                        $("#musicForm").hide();
+                        $("#music-list").show("normal", function () {
+                            //数据填充
+                            var musicList = "<div class='table-responsive'>" +
+                                "<table class='table table-condensed'>" +
+                                "<tr><th>Name</th><th>Time</th><th>Memory</th><th>Date</th><th>Operation</th></tr>";
+                            for (var i = 0; i < result.length; i++)
+                            {
+                                musicList = musicList +
+                                    "<tr>" +
+                                    "<td>" + result[i].name +"</td>" +
+                                    "<td></td>" +
+                                    "<td></td>" +
+                                    "<td>" + result[i].date + "</td>" +
+                                    "<td><a href='javascript:void(0);' id='musicPlay'><span class='glyphicon glyphicon-play' aria-hidden='true'></span></a></td>" +
+                                    "</tr>";
+                            }
+                            $("#music-div-left").html(musicList + "</table></div>");
+                        });
+                    }
+                }
+            })
+        }
+
+        /**
+         * @Description //检查声音上传状态
+         * @Param
+         * @Author oneTi
+         * @Date 14:15 2018/8/23
+         * @Return
+         **/
+        function checkMusicUploadStatus()
+        {
+            var musicDropzone = new Dropzone("form#musicForm", {
+                url: "/music/upload"
+            });
+            //当声音上传成功时执行
+            musicDropzone.on("success", function (result) {
+                $.ajax({
+                    url:"/music/showfive",
+                    success:function(result){
+                        console.log(result.length);
+                        // $("#musicForm").hide();
+                        // $("#music-list").show("normal", function () {
+                        //     // $("#music-div-left").html("<img src='/"+ result[0].name +"' style='width: 100%;height: 100%;' >");
+                        //     // $("#msuic-div-left").html("" +
+                        //     //     "");
+                        // });
+                    }
+                })
+            });
+        }
+
+        // $("#musicPlay").click(function(event) {
+        //     /* Act on the event */
+        //     $("#musicPlayDisk").show('normal', function() {
+        //         $(this).css({
+        //             'animation-name': 'diskRotate',
+        //             'animation-duration': '5s', /*持续时间*/
+        //             'animation-timing-function': 'linear', /*匀速*/
+        //             'animation-delay': '0s', /*延时播放时间*/
+        //             'animation-iteration-count': 'infinite', /*播放次数 不限*/
+        //             'animation-direction': 'normal', /*是否下一周期逆向播放*/
+        //             'animation-play-state': 'running' /*规定动画播放状态*/
+        //         });
+        //     });
+        // });
+
+        // $("#musicClose").click(function(event) {
+        //     /* Act on the event */
+        //     $("#musicPlayDisk").hide('normal', function() {
+        //         $(this).css({
+        //             'animation-name': 'diskRotate',
+        //             'animation-play-state': 'paused'
+        //         });
+        //     });
+        // });
+
         $(function () {
             //检查用户登陆状态
             checkUserStatus();
 
 
 
-            //检查用户上传状态
+            //检查用户当前图片上传状态
             checkUserPhotoUpload();
             //检查图片上传状态
             checkPhotoUploadStatus();
+            //检查用户当前声音上传状态
+            checkUserMusicUpload();
+            //检查声音上传状态
+            checkMusicUploadStatus();
         });
     </script>
 </body>

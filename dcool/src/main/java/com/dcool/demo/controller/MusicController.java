@@ -29,7 +29,7 @@ public class MusicController extends BaseController {
     @Value("${upload.music.path}")
     private String uploadMusicPath;
     @Autowired
-    private MusicService musicService;
+    MusicService musicService;
 
     /**
      * @Description //保存文件
