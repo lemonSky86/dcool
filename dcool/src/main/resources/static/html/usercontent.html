@@ -52,7 +52,7 @@
         }
 
         .contentLeftDiv{
-            width: 90%;
+            width: 70%;
             height: 100%;
             display: inline-block;
             padding: 1px;
@@ -64,7 +64,7 @@
         }
 
         .contentRightDiv{
-            width: 10%;
+            width: 30%;
             height: 100%;
             display: inline-block;
             overflow: hidden;
@@ -80,13 +80,26 @@
             border-radius: unset;
         }
 
+        .musicPlayTopDiv{
+            width: 100%;
+            height: 80%;
+            padding-top: 40px;
+        }
+
+        .musicPlayBottomDiv{
+            width: 100%;
+            height: 20%;
+            margin: 0 auto;
+        }
+
         .musicDisk{
             width: 161px;
             height: 161px;
-            border-radius: 45%; /*变成45%之后动画执行的时候会有一个虚假的动态效果*/
+            border-radius: 50%; /*变成45%之后动画执行的时候会有一个虚假的动态效果*/
             background-color: #000000;
-            margin-top: 115px;
-            display: none;
+            margin: 0 auto;
+            /*margin-top: 115px;*/
+            /*display: none;*/
         }
 
         /*旋转动画*/
@@ -163,7 +176,13 @@
                 <div class="contentRightDiv">
                     <!--<a class="btn btn-default" href="#" role="button">Link</a>-->
                     <!--<a class="btn btn-default" href="#" role="button">Link</a>-->
-                    <div class="musicDisk" id="musicPlayDisk"></div>
+                    <!--<div class="musicDisk" id="musicPlayDisk"></div>-->
+                    <div class="musicPlayTopDiv">
+                        <div class="musicDisk" id="musicPlayDisk"></div>
+                    </div>
+                    <div class="musicPlayBottomDiv">
+                        <audio src="" controls="controls" id="musicAudio"></audio>
+                    </div>
                 </div>
             </div>
         </div>
@@ -278,16 +297,14 @@
                             //数据填充
                             var musicList = "<div class='table-responsive'>" +
                                 "<table class='table table-condensed'>" +
-                                "<tr><th>Name</th><th>Time</th><th>Memory</th><th>Date</th><th>Operation</th></tr>";
+                                "<tr><th>Name</th><th>Date</th><th>Operation</th></tr>";
                             for (var i = 0; i < result.length; i++)
                             {
                                 musicList = musicList +
                                     "<tr>" +
                                     "<td>" + result[i].name +"</td>" +
-                                    "<td></td>" +
-                                    "<td></td>" +
                                     "<td>" + result[i].date + "</td>" +
-                                    "<td><a href='javascript:void(0);' id='musicPlay'><span class='glyphicon glyphicon-play' aria-hidden='true'></span></a></td>" +
+                                    "<td><a href='javascript:void(0);' id='musicPlay' onclick='musicPlayButton(\"" + result[i].name +"\")'><span class='glyphicon glyphicon-play' aria-hidden='true'></span></a></td>" +
                                     "</tr>";
                             }
                             $("#music-div-left").html(musicList + "</table></div>");
@@ -350,6 +367,21 @@
         //         });
         //     });
         // });
+        
+        function musicPlayButton(musicName){
+            debugger;
+            var musicAudioObject = $("#musicAudio");
+            if(musicAudioObject.paused == true){//暂停
+                musicAudioObject.html("<span class='glyphicon glyphicon-pause' aria-hidden='true'></span>");
+                musicAudioObject.src = "/" + musicName;
+                musicAudioObject.controls = true;
+                musicAudioObject.play();
+            }
+            else{//播放
+                musicAudioObject.html("<span class='glyphicon glyphicon-play' aria-hidden='true'></span>");
+                musicAudioObject.pause();
+            }
+        }
 
         $(function () {
             //检查用户登陆状态
