@@ -304,7 +304,7 @@
                                     "<tr>" +
                                     "<td>" + result[i].name +"</td>" +
                                     "<td>" + result[i].date + "</td>" +
-                                    "<td><a href='javascript:void(0);' id='musicPlay' onclick='musicPlayButton(\"" + result[i].name +"\")'><span class='glyphicon glyphicon-play' aria-hidden='true'></span></a></td>" +
+                                    "<td><p id='musicPlay' data-music-name='" + result[i].name + "' onclick='musicPlayButton(this)'><span class='glyphicon glyphicon-play' aria-hidden='true'></span></p></td>" +
                                     "</tr>";
                             }
                             $("#music-div-left").html(musicList + "</table></div>");
@@ -368,17 +368,16 @@
         //     });
         // });
         
-        function musicPlayButton(musicName){
-            debugger;
-            var musicAudioObject = $("#musicAudio");
+        function musicPlayButton(music){
+            var musicAudioObject = document.getElementById("musicAudio");
             if(musicAudioObject.paused == true){//暂停
-                musicAudioObject.html("<span class='glyphicon glyphicon-pause' aria-hidden='true'></span>");
-                musicAudioObject.src = "/" + musicName;
+                $(music).html("<span class='glyphicon glyphicon-pause' aria-hidden='true'></span>");
+                musicAudioObject.src = "/" + $(music).attr("data-music-name");
                 musicAudioObject.controls = true;
                 musicAudioObject.play();
             }
             else{//播放
-                musicAudioObject.html("<span class='glyphicon glyphicon-play' aria-hidden='true'></span>");
+                $(music).html("<span class='glyphicon glyphicon-play' aria-hidden='true'></span>");
                 musicAudioObject.pause();
             }
         }
