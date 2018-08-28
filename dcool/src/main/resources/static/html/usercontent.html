@@ -12,28 +12,35 @@
         .userContainerDiv{
             width: 80%;
             height: 50%;
-            /*margin-bottom: 10px;*/
             margin: 0 auto;
-            padding-top: 52px;
         }
 
         /*图片内容块*/
         .photoDiv{
             background-color: aquamarine;
-            /*margin: 0 auto;*/
-            /*padding-top: 52px;*/
+            background-image: url(/test.png);
         }
 
         /*声音内容块*/
         .musicDiv{
+            padding-top: 52px;
             background-color: lightskyblue;
             /*margin: 0 auto;*/
             /*padding-top: 52px;*/
         }
 
         /*drop area样式*/
+        /*.uploadForm{*/
+            /*width: 70%;*/
+            /*height: 300px;*/
+            /*margin: 0 auto;*/
+            /*background-color: aliceblue;*/
+            /*cursor: pointer;*/
+            /*text-align: center;*/
+            /*padding-top: 140px;*/
+        /*}*/
         .uploadForm{
-            width: 70%;
+            width: 100%;
             height: 300px;
             margin: 0 auto;
             background-color: aliceblue;
@@ -42,13 +49,36 @@
             padding-top: 140px;
         }
 
-        /*存放资源内容div样式*/
-        .contentDiv{
+        .photoContainerDiv{
             width: 80%;
             height: 300px;
             margin: 0 auto;
-            background-color: #FFFFFF;
-            display: none;
+            background-color: aliceblue;
+            /*padding-top: 52px;*/
+        }
+
+        .contentShowDiv{
+            width: 100%;
+            height: 300px;
+            margin: 0 auto;
+        }
+
+        /*存放资源内容div样式*/
+        .contentDiv{
+            width: 100%;
+            height: 300px;
+            margin: 0 auto;
+            /*background-color: #FFFFFF;*/
+            /*display: none;*/
+        }
+
+        /*模糊面具*/
+        .maskDiv{
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.5);
+            padding-top: 52px;
         }
 
         .contentLeftDiv{
@@ -61,6 +91,12 @@
 
         .contentLeftDiv img{
             margin: 0 auto;
+        }
+
+        .photoBigger{
+            position: relative;
+            float: right;
+            /*z-index: 999;*/
         }
 
         .contentRightDiv{
@@ -141,47 +177,46 @@
 </head>
 <body>
     <div class="dcool_header">
-        <!--<button type="button" class="btn btn-default" id="userInfoBtn">User Info</button>-->
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <ul class="nav navbar-nav">
                     ...
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <!--<li><a data-toggle="modal" href="#loginModal">Login</a></li>-->
-                    <!--<li><a data-toggle="modal" href="#registerModal">Register</a></li>-->
                     <p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link" id="userName"></a></p>
                 </ul>
             </div>
         </nav>
     </div>
     <div class="dcool_content">
-        <div class="userContainerDiv photoDiv">
-            <!--dropzone 图片上传表单-->
-            <form class="uploadForm" id="photoForm"></form>
-            <div class="contentDiv" id="photo-slide">
-                <div class="contentLeftDiv" id="photo-div-left">
-                </div>
-                <div class="contentRightDiv">
-                    <a class="btn btn-default" href="#" role="button">Link</a>
-                    <a class="btn btn-default" href="#" role="button">Link</a>
+        <div class="userContainerDiv photoDiv"><!--背景图片Div-->
+            <div class="maskDiv"><!--面具Div-->
+                <div class="photoContainerDiv"><!--内容Div-->
+                    <div class="contentDiv">
+                        <div class="contentLeftDiv" id="photo-left-div">
+                            <span class="photoBigger" id="photo-bigger" data-show="true"><span class="glyphicon glyphicon-resize-full" aria-hidden='true'></span></span>
+                            <form class="uploadForm" id="photoForm"></form>
+                            <div class="contentShowDiv" id="photo-slide">
+                            </div>
+                        </div>
+                        <div class="contentRightDiv" id="photo-right-div">
+                            <a class="btn btn-default" href="#" role="button" id="photo-btn-cancel">Cancel</a>
+                            <a class="btn btn-default" href="#" role="button" id="photo-btn-upload">Upload</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="userContainerDiv musicDiv">
-            <form class="uploadForm" id="musicForm"></form>
-            <div class="contentDiv" id="music-list">
-                <div class="contentLeftDiv" id="music-div-left">
-                </div>
-                <div class="contentRightDiv">
-                    <!--<a class="btn btn-default" href="#" role="button">Link</a>-->
-                    <!--<a class="btn btn-default" href="#" role="button">Link</a>-->
-                    <!--<div class="musicDisk" id="musicPlayDisk"></div>-->
-                    <div class="musicPlayTopDiv">
-                        <div class="musicDisk" id="musicPlayDisk"></div>
+            <div class="photoContainerDiv">
+                <div class="contentDiv">
+                    <div class="contentLeftDiv">
+                        <form class="uploadForm" id="musicForm"></form>
+                        <div class="contentShowDiv" id="music-list"></div>
                     </div>
-                    <div class="musicPlayBottomDiv">
-                        <audio src="" controls="controls" id="musicAudio"></audio>
+                    <div class="contentRightDiv">
+                        <a class="btn btn-default" href="#" role="button" id="music-btn-cancel">Cancel</a>
+                        <a class="btn btn-default" href="#" role="button" id="music-btn-upload">Upload</a>
                     </div>
                 </div>
             </div>
@@ -231,10 +266,18 @@
                     if(result != null)
                     {
                         // console.log(result);
-                        // $("#upload-form").hide();
-                        // $("#photo-slide").show("normal", function () {
-                        //     $("#photo-div-left").html("<img src='/"+ result[0].name +"' style='width: 100%;height: 100%;' >");
-                        // });
+                        $("#photoForm").hide();
+                        $("#photo-slide").show("normal", function () {
+                            $(this).html("<img src='/"+ result[0].name +"' style='width: 100%;height: 100%;' >");
+                        });
+
+                        $(".photoDiv").css({
+                            "background-image": "url(/" + result[0].name + ")",
+                            "background-size": "100% 100%"
+                        });
+
+                        photoUploadButton();
+                        buttonClick();
                     }
                 }
             })
@@ -265,16 +308,17 @@
             photoDropzone.previewsContainer = document.getElementById("dropZonePreview");//这里不能使用JQuery选择器
             //当图片上传成功时执行 其他相似方法可作参考
             photoDropzone.on("success", function (result) {
-                // $.ajax({
-                //     url:"/photo/latest",
-                //     success:function(result){
-                //         // console.log(result[0].name);
-                //         $("#upload-form").hide();
-                //         $("#photo-slide").show("normal", function () {
-                //             $("#photo-div-left").html("<img src='/"+ result[0].name +"' style='width: 100%;height: 100%;' >");
-                //         });
-                //     }
-                // })
+                $.ajax({
+                    url:"/photo/latest",
+                    success:function(result){
+                        // console.log(result[0].name);
+                        // $("#photoForm").hide();
+                        // $("#photo-slide").show("normal", function () {
+                        //     $(this).html("<img src='/"+ result[0].name +"' style='width: 100%;height: 100%;' >");
+                        // });
+                        photoUploadButton(result);
+                    }
+                })
             });
         }
 
@@ -307,8 +351,9 @@
                                     "<td><p id='musicPlay' data-music-name='" + result[i].name + "' onclick='musicPlayButton(this)'><span class='glyphicon glyphicon-play' aria-hidden='true'></span></p></td>" +
                                     "</tr>";
                             }
-                            $("#music-div-left").html(musicList + "</table></div>");
+                            $(this).html(musicList + "</table></div>");
                         });
+                        musicUploadButton();
                     }
                 }
             })
@@ -367,7 +412,14 @@
         //         });
         //     });
         // });
-        
+
+        /**
+         * @Description //音频播放button
+         * @Param
+         * @Author oneTi
+         * @Date 9:53 2018/8/28
+         * @Return
+         **/
         function musicPlayButton(music){
             var musicAudioObject = document.getElementById("musicAudio");
             if(musicAudioObject.paused == true){//暂停
@@ -380,6 +432,81 @@
                 $(music).html("<span class='glyphicon glyphicon-play' aria-hidden='true'></span>");
                 musicAudioObject.pause();
             }
+        }
+
+        /**
+         * @Description //图片上传button
+         * @Param
+         * @Author oneTi
+         * @Date 9:55 2018/8/28
+         * @Return
+         **/
+        function photoUploadButton(){
+            //上传点击事件绑定
+            $("#photo-btn-upload").on("click", function () {
+                $("#photo-slide").hide("normal", function () {
+                    $("#photoForm").show();
+                });
+            });
+            //上传撤销事件绑定
+            $("#photo-btn-cancel").on("click", function () {
+                $("#photoForm").hide("normal", function () {
+                    $("#photo-slide").show();
+                });
+            });
+        }
+
+        /**
+          * @Description //音频上传Button
+          * @Param
+          * @Author oneTi
+          * @Date 11:53 2018/8/28
+          * @Return
+          **/
+        function musicUploadButton(){
+            //上传点击事件绑定
+            $("#music-btn-upload").on("click", function () {
+                $("#music-list").hide("normal", function () {
+                    $("#musicForm").show();
+                });
+            });
+            //上传撤销事件绑定
+            $("#music-btn-cancel").on("click", function () {
+                $("#musicForm").hide("normal", function () {
+                    $("#music-list").show();
+                });
+            });
+        }
+
+        /**
+          * @Description //图片功能,放大缩小
+          * @Param
+          * @Author oneTi
+          * @Date 13:23 2018/8/28
+          * @Return
+          **/
+        function buttonClick()
+        {
+            //图片
+            $("#photo-bigger").on("click", function () {
+                if($(this).attr("data-show") == "true")
+                {
+                    $(this).html("<span class='glyphicon glyphicon-resize-small'aria-hidden='true'></span>");
+                    $("#photo-right-div").hide();
+                    $(this).attr("data-show", "false");
+                    $("#photo-left-div").css({
+                        "width": "100%"
+                    });
+                }
+                else{
+                    $(this).html("<span class='glyphicon glyphicon-resize-full'aria-hidden='true'></span>");
+                    $("#photo-right-div").show();
+                    $(this).attr("data-show", "true");
+                    $("#photo-left-div").css({
+                        "width": "70%"
+                    });
+                }
+            });
         }
 
         $(function () {
