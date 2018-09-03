@@ -3,6 +3,10 @@ package com.dcool.demo.controller;
 import com.dcool.demo.domain.MusicInfo;
 import com.dcool.demo.domain.UserInfo;
 import com.dcool.demo.service.MusicService;
+import com.dcool.demo.service.UserService;
+import org.apache.catalina.User;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +34,8 @@ public class MusicController extends BaseController {
     private String uploadMusicPath;
     @Autowired
     MusicService musicService;
+    @Autowired
+    UserService userService;
 
     /**
      * @Description //保存文件
@@ -67,6 +73,13 @@ public class MusicController extends BaseController {
     @RequestMapping("/music/showfive")
     @ResponseBody
     public List<MusicInfo> showTopFive(){
-        return musicService.findTopFiveMusicInfoByDate();
+        Subject currentUser = SecurityUtils.getSubject();
+        if(currentUser.isAuthenticated())
+        {
+            UserInfo user = userService.findUserInfoByUserName(currentUser.getPrincipal().toString());
+            List<MusicInfo> musicList = musicService.findMusicInfoByUserId(user.getId());
+            return musicList;
+        }
+        return null;
     }
 }

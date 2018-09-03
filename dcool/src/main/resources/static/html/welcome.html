@@ -20,20 +20,15 @@
 </head>
 <body>
     <div class="dcool_header">
-        <!--<button type="button" class="btn btn-link" data-toggle="modal" data-target="#loginModal">Sign</button>-->
-        <!--<button type="button" class="btn btn-link">Exit</button>-->
-        <!--<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#registerModal">-->
-            <!--Register-->
-        <!--</button>-->
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <ul class="nav navbar-nav">
-                    <li style="margin-right: 50px;"><a href="#" class="navbar-link">Mark</a></li>
-                    <li style="margin-right: 50px;"><a href="#" class="navbar-link">Mark</a></li>
+                    <li style="margin-right: 50px;"><a href="#" class="navbar-link">Welcome</a></li>
+                    <li style="margin-right: 50px;"><a href="#" class="navbar-link">Topic</a></li>
                     <li style="margin-right: 50px;"><a href="#" class="navbar-link">Mark</a></li>
                     <li style="margin-right: 50px;"><a href="#" class="navbar-link">Mark</a></li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right" id="login-box">
                     <li><a data-toggle="modal" href="#loginModal">Login</a></li>
                     <li><a data-toggle="modal" href="#registerModal">Register</a></li>
                 </ul>
@@ -65,12 +60,10 @@
                             <label for="exampleInputPassword1">Password</label>
                             <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
                         </div>
-                        <!--<input type="submit" value="submit">-->
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <!--<button type="button" class="btn btn-primary" id="">Save changes</button>-->
                     <button type="button" class="btn btn-primary" id="saveUser">Submit</button>
                 </div>
             </div>
@@ -108,6 +101,7 @@
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="../js/jquery.validate.js"></script>
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>-->
+    <script src="../js/main.js"></script>
     <script>
         $("#saveUser").click(function(){
             //表单验证
@@ -183,7 +177,7 @@
                 // }
             });
             $("#loginForm").submit();
-        })
+        });
     </script>
 </body>
 </html>

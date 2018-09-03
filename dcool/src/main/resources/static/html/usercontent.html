@@ -18,7 +18,7 @@
         /*图片内容块*/
         .photoDiv{
             background-color: aquamarine;
-            background-image: url(/test.png);
+            /*background-image: url(/test.png);*/
         }
 
         /*声音内容块*/
@@ -97,6 +97,7 @@
             position: relative;
             float: right;
             /*z-index: 999;*/
+            display: none;
         }
 
         .contentRightDiv{
@@ -136,6 +137,21 @@
             margin: 0 auto;
             /*margin-top: 115px;*/
             /*display: none;*/
+        }
+
+        /*浮动工具栏*/
+        .floatTool{
+            width: 45px;
+            height: 135px;
+            bottom: 0px;
+            right: 0px;
+            position: fixed;
+            background-color: aquamarine;
+        }
+
+        .floatTool button{
+            width: 45px;
+            height: 45px;
         }
 
         /*旋转动画*/
@@ -180,10 +196,18 @@
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <ul class="nav navbar-nav">
-                    ...
+                    <ul class="nav navbar-nav">
+                        <li style="margin-right: 50px;"><a href="#" class="navbar-link">Welcome</a></li>
+                        <li style="margin-right: 50px;"><a href="#" class="navbar-link">Topic</a></li>
+                        <li style="margin-right: 50px;"><a href="#" class="navbar-link">Mark</a></li>
+                        <li style="margin-right: 50px;"><a href="#" class="navbar-link">Mark</a></li>
+                    </ul>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link" id="userName"></a></p>
+                <ul class="nav navbar-nav navbar-right" id="login-box">
+                    <!--<p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link" id="userName"></a></p>-->
+                    <!--<p class="navbar-text navbar-right">Signed out <a href="#" class="navbar-link" id="sign-out"></a></p>-->
+                    <!--<li><a data-toggle="modal" href="#loginModal">Login</a></li>-->
+                    <!--<li><a data-toggle="modal" href="#registerModal">Register</a></li>-->
                 </ul>
             </div>
         </nav>
@@ -224,33 +248,51 @@
     </div>
     <div class="dcool_treil">
     </div>
+    <div class="floatTool">
+        <div class="btn-group-vertical" role="group" aria-label="...">
+            <button type="button" id="topicPublish" data-toggle="modal" data-target="#myTopicModal">T</button>
+        </div>
+    </div>
+    <!-- topic 发布 model -->
+    <div class="modal fade" id="myTopicModal" tabindex="-1" role="dialog" aria-labelledby="myTopicModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Topic</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/topic/save" id="topic-form" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="topic-title" class="control-label">Title:</label>
+                            <input type="text" name="topicTitle" class="form-control" id="topic-title">
+                        </div>
+                        <div class="form-group">
+                            <label for="topic-input-file">File input</label>
+                            <input type="file" name="topicFile" id="topic-input-file" accept="image/*,video/*">
+                            <p class="help-block">Example block-level help text here.</p>
+                            <div class="topicFilePreview" id="topic-file-preview"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="topic-description" class="control-label">Description:</label>
+                            <textarea class="form-control" name="topicDescription" id="topic-description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="topic-publish" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../js/jquery.validate.js"></script>
     <!--Drop Area上传控件-->
     <script src="../js/dropzone.js"></script>
+    <script src="../js/main.js"></script>
     <script>
-
-        /**
-          * @Description //检查用户状态
-          * @Param
-          * @Author oneTi
-          * @Date 15:32 2018/8/10
-          * @Return
-          **/
-        function checkUserStatus()
-        {
-            $.ajax({
-                async:false,
-                url:"/user/status/",
-                success:function (result) {
-                    if (result != null)
-                    {
-                       $("#userName").text(result.userName);
-                    }
-                }
-            })
-        }
-
         /**
           * @Description //查找当前用户是否上传过图片，是则返回查询结果
           * @Param
@@ -263,10 +305,10 @@
             $.ajax({
                 url:"/photo/latest",
                 success:function (result) {
-                    if(result != null)
+                    if(result.length != 0)
                     {
-                        // console.log(result);
                         $("#photoForm").hide();
+                        $("#photo-bigger").show();
                         $("#photo-slide").show("normal", function () {
                             $(this).html("<img src='/"+ result[0].name +"' style='width: 100%;height: 100%;' >");
                         });
@@ -334,7 +376,7 @@
             $.ajax({
                 url:"/music/showfive",
                 success:function (result) {
-                    if (result != null)
+                    if (result.length != 0)
                     {
                         $("#musicForm").hide();
                         $("#music-list").show("normal", function () {
@@ -509,6 +551,62 @@
             });
         }
 
+        /**
+          * @Description //topic发布
+          * @Param
+          * @Author oneTi
+          * @Date 13:03 2018/8/31
+          * @Return
+          **/
+        function topicPublish(){
+
+        }
+
+        //topic publish 表单提交验证
+        $("#topic-publish").click(function () {
+            $("#topic-form").validate({
+                debug:false,
+                rules:{
+                    topicTitle:{
+                        required: true,
+                        maxlength: 30
+                    },
+                    topicFile:{
+                        required: true
+                    },
+                    topicDescription:{
+                        required: true
+                    }
+                },
+                messages:{
+                    topicTitle:{
+                        required: "please fill title!"
+                    },
+                    topicFile:{
+                        required: "please select file!"
+                    },
+                    topicDescription:{
+                        required: "please fill description!"
+                    }
+                }
+            });
+            $("#topic-form").submit();
+        });
+
+        /**
+          * @Description //退出登录
+          * @Param
+          * @Author oneTi
+          * @Date 9:50 2018/9/3
+          * @Return
+          **/
+        // $("#sign-out").click(function () {
+        //     $.ajax({
+        //         url: "/user/login/out",
+        //         method: "POST"
+        //     })
+        // });
+
         $(function () {
             //检查用户登陆状态
             checkUserStatus();
@@ -523,6 +621,16 @@
             checkUserMusicUpload();
             //检查声音上传状态
             checkMusicUploadStatus();
+
+            //topic 上传预览
+            $("#topic-input-file").on("change", function () {
+                var fileReader = new FileReader();
+                var topicFile = document.getElementById("topic-input-file").files[0];
+                fileReader.readAsDataURL(topicFile);//readAsDataURL需要在选中文件的时候使用，因此用change方法
+                fileReader.onload = function (ev) {
+                    $("#topic-file-preview").html("<img src='" + this.result +"' width='100%' height='300px'>");
+                }
+            });
         });
     </script>
 </body>

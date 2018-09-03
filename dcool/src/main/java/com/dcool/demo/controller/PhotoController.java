@@ -3,7 +3,10 @@ package com.dcool.demo.controller;
 import com.dcool.demo.domain.PhotoInfo;
 import com.dcool.demo.domain.UserInfo;
 import com.dcool.demo.service.PhotoService;
+import com.dcool.demo.service.UserService;
 import com.dcool.demo.util.UserThreadLocalUtil;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -32,6 +35,8 @@ public class PhotoController extends BaseController {
     private ResourceLoader resourceLoader;
     @Autowired
     PhotoService photoService;
+    @Autowired
+    UserService userService;
 
     /**
      * @Description //上传
@@ -99,9 +104,17 @@ public class PhotoController extends BaseController {
     @ResponseBody
     public List<PhotoInfo> showLatestPhoto()
     {
-        UserInfo userInfo = (UserInfo) request.getSession().getAttribute("userInfo");
-        if(userInfo != null)
-        {
+//        UserInfo userInfo = (UserInfo) request.getSession().getAttribute("userInfo");
+//        if(userInfo != null)
+//        {
+//            List<PhotoInfo> photoList = photoService.findLatestPhotoByUserId(userInfo.getId());
+//            return  photoList;
+//        }
+//        return null;
+
+        Subject currentUser = SecurityUtils.getSubject();//shiro获取当前用户
+        UserInfo userInfo = userService.findUserInfoByUserName(currentUser.getPrincipal().toString());
+        if(currentUser.isAuthenticated()){
             List<PhotoInfo> photoList = photoService.findLatestPhotoByUserId(userInfo.getId());
             return  photoList;
         }

@@ -2,7 +2,9 @@ package com.dcool.demo.controller;
 
 import com.dcool.demo.domain.UserInfo;
 import com.dcool.demo.service.UserService;
-import com.dcool.demo.util.UserThreadLocalUtil;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,12 +30,47 @@ public class UserController extends BaseController {
         return "welcome";
     }
 
+    /**
+     * @Description //登陆
+     * @Param [userName, password]
+     * @Author oneTi
+     * @Date 9:54 2018/8/10
+     * @Return java.lang.String
+     **/
     @RequestMapping("/user/login")
     public String login(String userName, String password)
     {
-        UserInfo userInfo = userService.findUserInfoByUserName(userName);
-        request.getSession().setAttribute("userInfo", userInfo); //将用户信息保存到session
-        return "usercontent";
+//        UserInfo userInfo = userService.findUserInfoByUserName(userName);
+//        request.getSession().setAttribute("userInfo", userInfo); //将用户信息保存到session
+
+//        shiro改造
+        //用户信息收集
+        UsernamePasswordToken userToken = new UsernamePasswordToken(userName, password);
+        //获取当前正在执行的用户
+        Subject currentUser = SecurityUtils.getSubject();
+        try {
+            System.out.println("====login===>>>-->>>验证开始");
+            currentUser.login(userToken);
+            System.out.println("====login===>>>-->>>验证成功");
+        }catch(UnknownAccountException uae){
+            System.out.println("====login===>>>-->>>未知账户");
+        }catch (IncorrectCredentialsException ice){
+            System.out.println("====login===>>>-->>>密码错误");
+        }catch (LockedAccountException lae){
+            System.out.println("====login===>>>-->>>账户已锁定");
+        }catch (ExcessiveAttemptsException eae){
+            System.out.println("====login===>>>-->>>尝试次数过多");
+        }catch (AuthenticationException ae){
+            System.out.println("====login===>>>-->>>账户或密码错误");
+        }
+        //如果验证成功
+        if (currentUser.isAuthenticated())
+        {
+            return "usercontent";
+        }else{
+            return null;
+        }
+//        return "usercontent";
     }
 
     /**
@@ -104,10 +141,34 @@ public class UserController extends BaseController {
     @ResponseBody
     public UserInfo checkUserStatus()
     {
-        if(UserThreadLocalUtil.getUser() != null)
+//        if(UserThreadLocalUtil.getUser() != null)
+//        {
+//            System.out.println("UserController-->>>checkUserStatus()" + UserThreadLocalUtil.getUser());
+//            return UserThreadLocalUtil.getUser();
+//        }
+        Subject currentUser = SecurityUtils.getSubject();
+        System.out.println("====currentUser.isAuthenticated()===>>>" + currentUser.isAuthenticated());
+        if (currentUser.isAuthenticated())
         {
-            System.out.println("UserController-->>>checkUserStatus()" + UserThreadLocalUtil.getUser());
-            return UserThreadLocalUtil.getUser();
+            return userService.findUserInfoByUserName(currentUser.getPrincipal().toString());
+        }
+        return null;
+    }
+
+    /**
+      * @Description //登出
+      * @Param
+      * @Author oneTi
+      * @Date 9:54 2018/9/3
+      * @Return
+      **/
+    @RequestMapping("/user/login/out")
+    public String loginOut(){
+        Subject currentUser = SecurityUtils.getSubject();
+        if(currentUser != null && currentUser.isAuthenticated())
+        {
+            currentUser.logout();
+            return "redirect:/welcome";
         }
         return null;
     }
